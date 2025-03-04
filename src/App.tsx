@@ -59,13 +59,6 @@ function App() {
     removeClass();
   }
   // Cập nhật progress chính
-
-
-  const addclasslist = (stringclassname : string)=>{
-    if (classloading.current) {
-      classloading.current.classList.add(stringclassname);
-    }
-  }
   const removeClass = () => {
     if (classloading.current) {
       classloading.current.classList.remove("hidden");
