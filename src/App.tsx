@@ -1,7 +1,76 @@
+import { useState, useEffect , useRef } from "react";
 import './App.css'
-
 function App() {
+  const classloading = useRef<HTMLDivElement>(null);
+  const formEndn = useRef<HTMLDivElement>(null);
+  const [progress1, setProgress1] = useState(0);
+  const [progress2, setProgress2] = useState(0);
 
+  useEffect(() => {
+    const modal = classloading.current;
+    if (!modal) return;
+
+    const observer = new MutationObserver(() => {
+      if (!modal.classList.contains("hidden")) {
+        setProgress1(0);
+        setProgress2(0);
+        
+        let interval1 = setInterval(() => {
+          setProgress1((prev) => {
+            if (prev >= 100) {
+              clearInterval(interval1);
+              return 100;
+            }
+            return prev + 1;
+          });
+        }, 70);
+
+        let interval2 = setInterval(() => {
+          setProgress2((prev) => {
+            if (prev >= 100) {
+               console.log("da log duoc vao ben trong ham , dung co end" + progress1);
+                if (formEndn.current) {
+                  formEndn.current.classList.remove("hidden");
+              }
+              return 100;
+            }
+            return prev + 1;
+          });
+        }, 90);
+
+        return () => {
+          clearInterval(interval1);
+          clearInterval(interval2);
+        };
+      }
+    });
+
+    observer.observe(modal, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+  }, []);
+
+  const circumference = 2 * Math.PI * 58.5;
+  const strokeDashoffset1 = circumference * (1 - progress1 / 100);
+  const strokeDashoffset2 = circumference * (1 - progress2 / 100);
+
+  const [inputValue, setInputValue] = useState("");
+  const runBtnclick = ()=>{
+    if(inputValue === '') return;
+    removeClass();
+  }
+  // Cập nhật progress chính
+
+
+  const addclasslist = (stringclassname : string)=>{
+    if (classloading.current) {
+      classloading.current.classList.add(stringclassname);
+    }
+  }
+  const removeClass = () => {
+    if (classloading.current) {
+      classloading.current.classList.remove("hidden");
+    }
+  };
   return (
     <>
     <header />
@@ -433,6 +502,8 @@ function App() {
           <div className="input">
             <input
               type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
               placeholder="Describe your video..."
               id="prompt-code"
               autoComplete="off"
@@ -911,7 +982,7 @@ function App() {
               </div>
             </div>
             <div className="run">
-              <button className="runBtn">
+              <button className="runBtn" onClick={runBtnclick}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width={24}
@@ -929,19 +1000,7 @@ function App() {
           </div>
         </div>
       </section>
-      <div className="modal hidden" id="modal-download">
-        <div className="modalHeader">
-          <a href="" title="" className="modalHeaderLogo">
-            <img src="images/logo.svg" alt="" />
-          </a>
-          <div className="modalInfo">
-            <span>AI · Generate</span>
-            <div>
-              <span id="res">480p</span>
-              <span id="time">15/02/2025, 09:32</span>
-            </div>
-          </div>
-        </div>
+      <div ref={classloading} className="modal hidden" id="modal-download">
         <div className="modalBody">
           <div className="videos" data-ratio="16:9">
             <div className="video-item">
@@ -965,8 +1024,8 @@ function App() {
                     className="origin-center transition-[stroke-dashoffset] -rotate-90"
                     stroke="currentColor"
                     strokeWidth={3}
-                    strokeDashoffset="30.564153594869367"
-                    strokeDasharray="367.5663404700058 367.5663404700058"
+                    strokeDasharray={circumference}
+                   strokeDashoffset={strokeDashoffset1}
                     strokeLinecap="round"
                     fill="transparent"
                     r="58.5"
@@ -976,79 +1035,7 @@ function App() {
                   />
                 </svg>
                 <div id="percent1" className="percent">
-                  0%
-                </div>
-              </div>
-            </div>
-            <div className="video-item">
-              <div className="loading">
-                <svg
-                  width={120}
-                  height={120}
-                  viewBox="0 0 120 120"
-                  className="h-20 w-20"
-                >
-                  <circle
-                    stroke="#8b7cc6"
-                    strokeWidth={3}
-                    fill="transparent"
-                    r="58.5"
-                    cx={60}
-                    cy={60}
-                  ></circle>
-                  <circle
-                    id="progress2"
-                    className="origin-center transition-[stroke-dashoffset] -rotate-90"
-                    stroke="currentColor"
-                    strokeWidth={3}
-                    strokeDashoffset="30.564153594869367"
-                    strokeDasharray="367.5663404700058 367.5663404700058"
-                    strokeLinecap="round"
-                    fill="transparent"
-                    r="58.5"
-                    cx={60}
-                    cy={60}
-                    style={{ animationDuration: "30s", strokeDashoffset: 0 }}
-                  />
-                </svg>
-                <div id="percent2" className="percent">
-                  0%
-                </div>
-              </div>
-            </div>
-            <div className="video-item">
-              <div className="loading">
-                <svg
-                  width={120}
-                  height={120}
-                  viewBox="0 0 120 120"
-                  className="h-20 w-20"
-                >
-                  <circle
-                    stroke="#8b7cc6"
-                    strokeWidth={3}
-                    fill="transparent"
-                    r="58.5"
-                    cx={60}
-                    cy={60}
-                  ></circle>
-                  <circle
-                    id="progress3"
-                    className="origin-center transition-[stroke-dashoffset] -rotate-90"
-                    stroke="currentColor"
-                    strokeWidth={3}
-                    strokeDashoffset="30.564153594869367"
-                    strokeDasharray="367.5663404700058 367.5663404700058"
-                    strokeLinecap="round"
-                    fill="transparent"
-                    r="58.5"
-                    cx={60}
-                    cy={60}
-                    style={{ animationDuration: "30s", strokeDashoffset: 0 }}
-                  />
-                </svg>
-                <div id="percent3" className="percent">
-                  0%
+                  {progress1}%
                 </div>
               </div>
             </div>
@@ -1073,8 +1060,8 @@ function App() {
                     className="origin-center transition-[stroke-dashoffset] -rotate-90"
                     stroke="currentColor"
                     strokeWidth={3}
-                    strokeDashoffset="30.564153594869367"
-                    strokeDasharray="367.5663404700058 367.5663404700058"
+                    strokeDasharray={circumference}
+                   strokeDashoffset={strokeDashoffset2}
                     strokeLinecap="round"
                     fill="transparent"
                     r="58.5"
@@ -1084,7 +1071,7 @@ function App() {
                   />
                 </svg>
                 <div id="percent4" className="percent">
-                  0%
+                  {progress2}%
                 </div>
               </div>
             </div>
@@ -1360,9 +1347,10 @@ function App() {
           </div>
         </div>
       </div>
-      <div className="modal hidden" id="modal-thank">
+      <div ref={formEndn} className="modal hidden" id="modal-thank">
         <div className="modal-overlay" />
         <div className="modal-content">
+          <a href="/">
           <div className="modal-close">
             <svg
               className="w-6 h-6 text-gray-800 dark:text-white"
@@ -1382,6 +1370,7 @@ function App() {
               />
             </svg>
           </div>
+          </a>
           <div className="modal-box">
             <div className="modal-box--logo">
               <svg
