@@ -48,9 +48,6 @@ function App() {
     observer.observe(modal, { attributes: true, attributeFilter: ["class"] });
     return () => observer.disconnect();
   }, []);
-
-
-
   useEffect(() => {
     const handleTextClick = (event: Event) => {
       const target = event.target as HTMLElement;
@@ -470,7 +467,7 @@ function App() {
           </div>
           <div className="gridItem">
             <video
-              src="media/assets2Ftask_01jgt1k7e2es1aqhm0s230f0692Ftask_01jgt1k7e2es1aqhm0s230f069_genid_c3c23d9d-defd-4ef3-8d32-c367d78fa9ae_25_01_05_01_35_7138142Fvideos2F00000_9162602Fmd.mp4"
+              src="media/assets2Ftask_01jgt1mk4pfh7basnwrdjyf3z72Ftask_01jgt1mk4pfh7basnwrdjyf3z7_genid_f0a72f26-d6f5-4378-8b0d-1f5f0bdb3843_25_01_05_01_35_1562862Fvideos2F00000_1847212Fmd.mp4"
               preload="metadata"
               loop={true}
               controlsList="nodownload"
@@ -766,6 +763,7 @@ function App() {
                   fill="none"
                   viewBox="0 0 24 24"
                   className="hidden h-[18px] w-[18px] desktop:block"
+                  
                 >
                   <path
                     stroke="currentColor"

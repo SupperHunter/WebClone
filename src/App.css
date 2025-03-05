@@ -870,3 +870,8 @@ main .content .images .delete {
 #modal-verify .loading.hidden {
     display: none;
 }
+
+.actionText svg, .actionText span {
+    pointer-events: none;
+  }
+  
