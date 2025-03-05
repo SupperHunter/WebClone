@@ -49,6 +49,76 @@ function App() {
     return () => observer.disconnect();
   }, []);
 
+
+
+  useEffect(() => {
+    const handleTextClick = (event: Event) => {
+      const target = event.target as HTMLElement;
+      if (target.classList.contains("actionText")) {
+        event.stopPropagation();
+
+        const actionMenu = target.previousElementSibling as HTMLElement;
+        const allActionMenus = document.querySelectorAll<HTMLElement>(".actionMenu");
+
+        console.log(allActionMenus);
+
+        allActionMenus.forEach((menu) => {
+          if (menu !== actionMenu && menu.classList.contains("active")) {
+            menu.classList.remove("active");
+            menu.style.top = "0";
+          }
+        });
+
+        actionMenu.classList.toggle("active");
+        const menuHeight = actionMenu.offsetHeight + 10;
+        actionMenu.style.top = actionMenu.classList.contains("active") ? `-${menuHeight}px` : "0";
+      }
+    };
+
+    const handleDocumentClick = (event: Event) => {
+      const target = event.target as Node;
+      const actionMenuElements = document.querySelectorAll<HTMLElement>(".actionMenu");
+      actionMenuElements.forEach((actionMenu) => {
+        if (!actionMenu.contains(target) && !(target as HTMLElement).closest(".actionText")) {
+          actionMenu.classList.remove("active");
+          actionMenu.style.top = "0";
+        }
+      });
+    };
+
+    const handleItemClick = (event: Event) => {
+      const target = event.target as HTMLElement;
+      if (target.classList.contains("actionItem")) {
+        event.stopPropagation();
+        const actionMenu = target.closest(".actionMenu") as HTMLElement;
+        const param = target.getAttribute("data-param") || "";
+        const allActionItems = actionMenu.querySelectorAll(".actionItem");
+
+        allActionItems.forEach((item) => {
+          item.classList.remove("active");
+        });
+
+        const actionTextSpan = actionMenu.parentElement?.querySelector(".actionText span");
+        if (actionTextSpan) {
+          actionTextSpan.innerHTML = param;
+        }
+
+        target.classList.add("active");
+      }
+    };
+
+    document.addEventListener("click", handleTextClick);
+    document.addEventListener("click", handleDocumentClick);
+    document.addEventListener("click", handleItemClick);
+
+    return () => {
+      document.removeEventListener("click", handleTextClick);
+      document.removeEventListener("click", handleDocumentClick);
+      document.removeEventListener("click", handleItemClick);
+    };
+  }, []);
+
+
   const circumference = 2 * Math.PI * 58.5;
   const strokeDashoffset1 = circumference * (1 - progress1 / 100);
   const strokeDashoffset2 = circumference * (1 - progress2 / 100);
